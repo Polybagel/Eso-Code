@@ -97,7 +97,7 @@ def generate_c_code(bf_code, memorySize):
     ###add int main()###
     result+="int main () \n{\n"
 
-    ###create memory buffer stack with a set amount of ram###
+    ###create memory buffer stack with a set amount of ram, the typical size is 30,000 cells.###
     result+="      //create a memory buffer\n      int memory["+str(memorySize)+"];\nfor(int i = 0; i < "+str(memorySize)+"; i++){\nmemory[i]=0;\n}\n      int memPointer = 0;\n\n"
 
     ###replace brainfuck commands with C equivalants###
@@ -150,7 +150,7 @@ def client_exit():
 
 def compile_code(c):
     bf_code = c.get("1.0",'end-1c')
-    generate_c_code(bf_code,1024)
+    generate_c_code(bf_code,30000)
     return 0
 
 def about():
@@ -158,16 +158,16 @@ def about():
     filewin.geometry("320x240")
     filewin.title('About the brainfuck++ compiler')
    
-    button = Label(filewin, wraplength=250, text="The brainfuck++ compiler is designed to take brainfuck source code, convert it to C code, and compile it into an .exe file using gcc.\n\nCreated by Polybagel")
-    button.grid(row=0,column=0,padx=25,pady=10)
+    label = Label(filewin, wraplength=250, text="The brainfuck++ compiler is designed to take brainfuck source code, convert it to C code, and compile it into an .exe file using gcc.\n\nCreated by Polybagel")
+    label.grid(row=0,column=0,padx=25,pady=10)
 
 def tutorial():
     filewin = Toplevel(root)
     filewin.geometry("320x240")
     filewin.title('How to use the brainfuck++ compiler')
    
-    button = Label(filewin, wraplength=250, text="Upon opening the brainfuck++ compiler, you can simply paste brainfuck source code into the text box.\n\nIf you want to save your code, simply go to File->Save, and select the file destination.\n\nIf you want to compile your code into an exe, go to File->Compile, and choose a file destination for the exe.\n\nTo open a source file, go to File->Open, and select the file to open.")
-    button.grid(row=0,column=0,padx=25,pady=10)
+    label = Label(filewin, wraplength=250, text="Upon opening the brainfuck++ compiler, you can simply paste brainfuck source code into the text box.\n\nIf you want to save your code, simply go to File->Save, and select the file destination.\n\nIf you want to compile your code into an exe, go to File->Compile, and choose a file destination for the exe.\n\nTo open a source file, go to File->Open, and select the file to open.")
+    label.grid(row=0,column=0,padx=25,pady=10)
 
 ###main code###
 code = ScrolledText(root)
