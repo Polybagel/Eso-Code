@@ -112,6 +112,8 @@ def generate_c_code(bf_code, memorySize):
             result+="            memory[memPointer]-=1;\n"
         elif command == ".":
             result+="            printf(\"%c\",memory[memPointer]);\n"
+        elif command == ",":
+            result+="            memory[memPointer] = getchar();\n"
         elif command == "[":
             result+="\n      while(memory[memPointer] != 0)\n      {\n"
         elif command == "]":
