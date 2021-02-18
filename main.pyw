@@ -101,16 +101,43 @@ def generate_c_code(bf_code, memorySize):
     result+="      //create a memory buffer\n      int memory["+str(memorySize)+"];\nfor(int i = 0; i < "+str(memorySize)+"; i++){\nmemory[i]=0;\n}\n      int memPointer = 0;\n\n"
 
     ###replace brainfuck commands with C equivalants###
-    for command in cleanedCode:
-        if command == "<":
-            result+="            memPointer-=1;\n"
-        elif command == ">":
-            result+="            memPointer+=1;\n"
-        elif command == "+":
-            result+="            memory[memPointer]+=1;\n"
-        elif command == "-":
-            result+="            memory[memPointer]-=1;\n"
-        elif command == ".":
+
+
+
+
+
+
+    previousCommand = "none"
+    for i in range(len(cleanedCode)):
+        command = cleanedCode[i]
+
+        if not command == previousCommand:
+            previousCommand = command
+            commandRepeats = 0
+            search = 1
+
+            lastCommand = command
+            while True:
+                try:
+                    if cleanedCode[i+search] == command:
+                        search+=1
+                        commandRepeats+=1
+                    else:
+                        break
+                except:
+                    ###we are at the last character of the code, break!
+                    break
+            
+            if command == "<":
+                result+="            memPointer-="+str(commandRepeats+1)+";\n"
+            elif command == ">":
+                result+="            memPointer+="+str(commandRepeats+1)+";\n"
+            elif command == "+":
+                result+="            memory[memPointer]+="+str(commandRepeats+1)+";\n"
+            elif command == "-":
+                result+="            memory[memPointer]-="+str(commandRepeats+1)+";\n"
+                
+        if command == ".":
             result+="            putchar(memory[memPointer]);\n"
         elif command == ",":
             result+="            memory[memPointer] = getchar();\n"
@@ -118,10 +145,18 @@ def generate_c_code(bf_code, memorySize):
             result+="\n      while(memory[memPointer] != 0)\n      {\n"
         elif command == "]":
             result+="}\n"
+
+
+
+
+
+
+            
     
     ###add the final return 0 and '}' character###
     result+="\ngetchar();\nreturn 0;\n}"
 
+    print(result)
     output_code(result)
     return result
 
