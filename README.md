@@ -10,7 +10,7 @@ To install, just pull this repo and run the .pyw file.
 # Requirements?
 The only requirements to use this IDE include the following:
  - Latest version of python
- - A working installation of the GCC compiler (Only needed for compiling programs, you can stil write, save, and load programs with this.)
+ - A working installation of the GCC compiler (Only needed for compiling programs, you can still write, save, and load programs without GCC installed.)
 
 P.S. This may also work on older versions of python 3, but I have not tested them.
 
