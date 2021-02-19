@@ -1,8 +1,8 @@
-# Brainfuck-Compiler
-A small IDE designed for brainfuck programming.
+# BF Code
+A small IDE designed for brainfuck programming; name inspired by VS Code.
 
 # Features
-Brainfuck Compiler is a fully functional yet basic IDE that can compile brainfuck code into an excecutable file.
+BF Code is a fully functional yet basic IDE that can compile brainfuck code into an excecutable file.
 
 # How to install and run
 To install, just pull this repo and run the .pyw file.
