@@ -33,6 +33,6 @@ If you want things to be a little easier, you can generate brainfuck code to eas
 In the generate print string menu, you can type any source text you want; once you're done, hit insert macro.
 
 # User Interface
-![Main Interface](screenshots/main_interface.png?raw=true)
+![Main Interface](screenshots/main_interface.PNG?raw=true)
 
-![Insert Macros](screenshots/insert_macro.png?raw=true)
+![Insert Macros](screenshots/insert_macro.PNG?raw=true)
