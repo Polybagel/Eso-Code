@@ -105,11 +105,6 @@ def generate_c_code(bf_code, memorySize):
 
     ### replace brainfuck commands with C equivalants
 
-
-
-
-
-
     previousCommand = "none"
     for i in range(len(cleanedCode)):
         command = cleanedCode[i]
@@ -149,13 +144,6 @@ def generate_c_code(bf_code, memorySize):
         elif command == "]":
             result+="}\n"
 
-
-
-
-
-
-            
-    
     ### add the final return 0 and '}' character
     result+="\ngetchar();\nreturn 0;\n}"
 
@@ -222,9 +210,9 @@ save_code = partial(save_code, code)
 menubar = Menu(root)
 filemenu = Menu(menubar, tearoff=0)
 filemenu.add_command(label="New", command=new_code)
-filemenu.add_command(label="Compile", command=compile_code)
-filemenu.add_command(label="Save", command=save_code)
 filemenu.add_command(label="Open", command=load_code)
+filemenu.add_command(label="Save", command=save_code)
+filemenu.add_command(label="Compile", command=compile_code)
 
 filemenu.add_separator()
 
@@ -233,7 +221,7 @@ menubar.add_cascade(label="File", menu=filemenu)
 editmenu = Menu(menubar, tearoff=0)
 
 helpmenu = Menu(menubar, tearoff=0)
-helpmenu.add_command(label="About...", command=about)
+helpmenu.add_command(label="About", command=about)
 helpmenu.add_command(label="How to use...", command=tutorial)
 menubar.add_cascade(label="Help", menu=helpmenu)
 
