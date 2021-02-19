@@ -152,7 +152,14 @@ def generate_c_code(bf_code, memorySize):
 
 ### boilerplate tkinter code#
 root = Tk()
+
+### grab the icon
+BF_Icon = PhotoImage(file = 'textures/icon.png')
+
 root.title('BF Code')
+
+### set the icon
+root.iconphoto(False, BF_Icon)
 
 ### menu bar functions
 def load_code():
@@ -184,6 +191,7 @@ def compile_code(c):
 ### display the About window.
 def about():
     filewin = Toplevel(root)
+    filewin.iconphoto(False, BF_Icon)
     filewin.geometry("320x120")
     filewin.title('About BF Code')
     filewin.resizable(False, False)
@@ -194,8 +202,9 @@ def about():
 ### display the quick start guide.
 def tutorial():
     filewin = Toplevel(root)
+    filewin.iconphoto(False, BF_Icon)
     filewin.geometry("320x240")
-    filewin.title('How to use BF Code')
+    filewin.title('BF Code Quick Start Guide')
     filewin.resizable(False, False)
    
     label = Label(filewin, wraplength=250, text="Upon opening the Brainfuck compiler, you can simply paste brainfuck source code into the text box.\n\nIf you want to save your code, simply go to File->Save, and select the file destination.\n\nIf you want to compile your code into an exe, go to File->Compile, and choose a file destination for the exe.\n\nTo open a source file, go to File->Open, and select the file to open.")
@@ -224,7 +233,7 @@ editmenu = Menu(menubar, tearoff=0)
 
 helpmenu = Menu(menubar, tearoff=0)
 helpmenu.add_command(label="About", command=about)
-helpmenu.add_command(label="How to use...", command=tutorial)
+helpmenu.add_command(label="Quick Start Guide", command=tutorial)
 menubar.add_cascade(label="Help", menu=helpmenu)
 
 root.config(menu=menubar)
