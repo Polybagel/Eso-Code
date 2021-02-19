@@ -27,5 +27,5 @@ Once you have written your code, you might want to comment it. There is no speci
 
 Now that you have a fully fledged and documented masterpiece in the IDE, it's time to compile. Simply go to the file menu and hit the compile button. It will ask you for a location and name for the exe. Hit save, and its done!
 
-If you want things to be a little easier, you can generate brainfuck code to easily pring strings. This option can be found in Insert Macro -> Generate Print String.
-In the generate print string menu, you can type and source text you want; once you're done, hit insert macro.
+If you want things to be a little easier, you can generate brainfuck code to easily pring strings. This option can be found in "Insert Macro" -> "Generate Print String".
+In the generate print string menu, you can type any source text you want; once you're done, hit insert macro.
