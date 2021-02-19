@@ -1,3 +1,14 @@
+"""
+
+    BF Code
+
+    Created by Polybagel
+
+    Written in python 3.9.1
+    
+
+"""
+
 ### imports
 from tkinter import *
 from tkinter.scrolledtext import ScrolledText
@@ -6,19 +17,26 @@ from tkinter import filedialog
 import subprocess
 import os
 
-"""
-    BF Code
-    Created by Polybagel
-"""
+import interpreter
 
-### a list of valid brainfuck commands###
+### a list of valid brainfuck commands
 valid_commands = "><+-.,[]"
 
 ### allowed file formats###
 files = [('Brainfuck source file', '*.bf')]
 ex = [('Excecutable file', '*.exe')]
 
-### generates a .bat file containing the generated command to compile the c source with gcc.###
+### convert string to BF output.
+def convertStringToBF(target):
+    result = ""
+    
+    for c in target:
+        asciiValue = ord(c)
+        result+="+"*asciiValue+".[-]"
+
+    return result
+
+### generates a .bat file containing the generated command to compile the c source with gcc.
 def generate_compile_batch(command,setting2):
     f=open("compile.bat","w")
     f.write(command)
@@ -57,40 +75,23 @@ def output_code(code,setting1,setting2):
     f.write(text2save)
     f.close() # create the c file
 
-    ### compile the c program###
+    ### compile the c program, by first generated the GCC compile command
     command = "gcc \""+f.name+"\" -o \""+f.name[0:len(f.name)-2]+"\""
 
     generate_compile_batch(command,setting2)
 
-    if setting1 == 0: ### don't delete the C file
+    if setting1 == 0: ### don't delete the C file if the setting is set
         os.remove(f.name)
 
 ### removes unsupported characters, blank lines, and formats it correctly.###
-def cleanup_bf_code(bf_code):
-    lines = bf_code.split("\n")
-
-    result = ""
-
-    for line in lines:
-        ### test 1, is the line empty?
-        if line == "":
-            print("line empty!")
-        else:
-            ### step 2, cleanup the line itself
-            cleanLine = ""
-            for char in line:
-                if char in valid_commands:
-                    cleanLine+=char
-                    
-            result+=cleanLine
-
-    return result
+def cleanup(code):
+    return ''.join(filter(lambda x: x in ['.', ',', '[', ']', '<', '>', '+', '-'], code))
 
 ### takes the raw brainfuck code, cleans it, and converts it into C code.
 def generate_c_code(bf_code, memorySize, settingCcode, settingBatchfile):
 
     result = ""
-    cleanedCode = cleanup_bf_code(bf_code)
+    cleanedCode = cleanup(bf_code)
 
     ### add header text
     result+="""
@@ -107,8 +108,8 @@ def generate_c_code(bf_code, memorySize, settingCcode, settingBatchfile):
     ### create memory buffer stack with a set amount of ram, the typical size is 30,000 cells.
     result+="      //create a memory buffer\n      int memory["+str(memorySize)+"];\nfor(int i = 0; i < "+str(memorySize)+"; i++){\nmemory[i]=0;\n}\n      int memPointer = 0;\n\n"
 
-    ### replace brainfuck commands with C equivalants
 
+    ### replace brainfuck commands with C equivalants
     previousCommand = "none"
     for i in range(len(cleanedCode)):
         command = cleanedCode[i]
@@ -187,9 +188,23 @@ def client_exit():
     exit()
 
 def confirmCompile(c,setting1,setting2):
-    
     bf_code = c.get("1.0",'end-1c')
     generate_c_code(bf_code,30000,setting1,setting2)
+
+### a built in BF interpreter
+def interpret_code(c):
+
+    code = c.get("1.0","end-1c")
+    
+    intwin = Toplevel(root)
+    intwin.iconphoto(False, BF_Icon)
+    intwin.geometry("400x300")
+    intwin.title('BF Internal Interpreter')
+
+    interpretedOutput = interpreter.evaluate(code)
+
+    output = Label(intwin, text=interpretedOutput)
+    output.grid(row=0,column=0,padx=5,pady=5)
 
 ### retrieve the code from the scrolling entry box, and send it off to get generated into C code.
 def compile_code(c):
@@ -217,6 +232,28 @@ def about():
     label = Label(filewin, wraplength=250, text="The Brainfuck compiler is designed to take brainfuck source code, convert it to C code, and compile it into an .exe file using gcc.\n\nCreated by Polybagel")
     label.grid(row=0,column=0,padx=25,pady=10)
 
+def insertMacro(source):
+
+    BFcode = convertStringToBF(source)
+    
+    code.insert(END, "\n"+BFcode)
+
+def generateMacro():
+    macroWin = Toplevel(root)
+    macroWin.iconphoto(False, BF_Icon)
+    macroWin.geometry("400x500")
+    macroWin.resizable(False, False)
+    macroWin.title('Generate Print String Macro')
+
+    info = Label(macroWin, text="Generates bf code that prints an inputted string.")
+    info.pack(side=TOP,pady=10)
+
+    target = ScrolledText(macroWin)
+    target.pack(side=TOP, fill=BOTH, expand=YES, padx=10, pady=7)
+
+    insert = Button(macroWin, text="Insert Macro", command = lambda: insertMacro(target.get("1.0","end-1c")))
+    insert.pack(pady=10)
+
 ### display the quick start guide.
 def tutorial():
     filewin = Toplevel(root)
@@ -233,15 +270,22 @@ code = ScrolledText(root)
 code.pack(side=TOP, fill=BOTH, expand=YES, padx=10, pady=10)
 
 compile_code = partial(compile_code, code)
+interpret_code = partial(interpret_code, code)
 save_code = partial(save_code, code)
 
 ### menubar
 menubar = Menu(root)
 filemenu = Menu(menubar, tearoff=0)
+
+### file cascade
 filemenu.add_command(label="New", command=new_code)
 filemenu.add_command(label="Open", command=load_code)
 filemenu.add_command(label="Save", command=save_code)
+
+filemenu.add_separator()
+
 filemenu.add_command(label="Compile", command=compile_code)
+filemenu.add_command(label="Interpret", command=interpret_code)
 
 filemenu.add_separator()
 
@@ -249,11 +293,18 @@ filemenu.add_command(label="Exit", command=client_exit)
 menubar.add_cascade(label="File", menu=filemenu)
 editmenu = Menu(menubar, tearoff=0)
 
+### macro generator cascade
+macros = Menu(menubar, tearoff=0)
+macros.add_command(label="Generate Print String", command=generateMacro)
+menubar.add_cascade(label="Insert Macro...", menu=macros)
+
+### help cascade
 helpmenu = Menu(menubar, tearoff=0)
 helpmenu.add_command(label="About", command=about)
 helpmenu.add_command(label="Quick Start Guide", command=tutorial)
 menubar.add_cascade(label="Help", menu=helpmenu)
 
+### set up the menubar
 root.config(menu=menubar)
 root.mainloop()
 
