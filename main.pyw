@@ -19,13 +19,15 @@ files = [('Brainfuck source file', '*.bf')]
 ex = [('Excecutable file', '*.exe')]
 
 ### generates a .bat file containing the generated command to compile the c source with gcc.###
-def generate_compile_batch(command):
+def generate_compile_batch(command,setting2):
     f=open("compile.bat","w")
     f.write(command)
     f.close()
 
     subprocess.call([r'compile.bat'])
-    os.remove("compile.bat")
+
+    if setting2 == 0: ### don't delete the batch file
+        os.remove("compile.bat")
 
 def save_code(code):
     got = code.get("1.0",'end-1c')
@@ -47,7 +49,7 @@ def save_code(code):
     after all that is done, it removes the c source and batch file, leaving just the exe.
 """
     
-def output_code(code):
+def output_code(code,setting1,setting2):
     f = filedialog.asksaveasfile(mode='w', defaultextension=".c")
     if f is None: # asksaveasfile return `None` if dialog closed with "cancel".
         return
@@ -58,9 +60,10 @@ def output_code(code):
     ### compile the c program###
     command = "gcc \""+f.name+"\" -o \""+f.name[0:len(f.name)-2]+"\""
 
-    generate_compile_batch(command)
+    generate_compile_batch(command,setting2)
 
-    os.remove(f.name)
+    if setting1 == 0: ### don't delete the C file
+        os.remove(f.name)
 
 ### removes unsupported characters, blank lines, and formats it correctly.###
 def cleanup_bf_code(bf_code):
@@ -84,7 +87,8 @@ def cleanup_bf_code(bf_code):
     return result
 
 ### takes the raw brainfuck code, cleans it, and converts it into C code.
-def generate_c_code(bf_code, memorySize):
+def generate_c_code(bf_code, memorySize, settingCcode, settingBatchfile):
+
     result = ""
     cleanedCode = cleanup_bf_code(bf_code)
 
@@ -147,7 +151,7 @@ def generate_c_code(bf_code, memorySize):
     ### add the final return 0 and '}' character
     result+="\ngetchar();\nreturn 0;\n}"
 
-    output_code(result)
+    output_code(result,settingCcode,settingBatchfile)
     return result
 
 ### boilerplate tkinter code#
@@ -182,11 +186,25 @@ def new_code():
 def client_exit():
     exit()
 
+def confirmCompile(c,setting1,setting2):
+    
+    bf_code = c.get("1.0",'end-1c')
+    generate_c_code(bf_code,30000,setting1,setting2)
+
 ### retrieve the code from the scrolling entry box, and send it off to get generated into C code.
 def compile_code(c):
-    bf_code = c.get("1.0",'end-1c')
-    generate_c_code(bf_code,30000)
-    return 0
+    filewin = Toplevel(root)
+    filewin.iconphoto(False, BF_Icon)
+    filewin.geometry("320x120")
+    filewin.title('Compile Settings')
+    filewin.resizable(False, False)
+
+    keepCcode = IntVar()
+    Checkbutton(filewin, text="Don't delete generated C file", variable=keepCcode).grid(row=0, sticky=W, padx=25, pady=10)
+    keepBatchfile = IntVar()
+    Checkbutton(filewin, text="Don't delete generated .bat compile file", variable=keepBatchfile).grid(row=1, sticky=W, padx=25, pady=3)
+
+    Button(filewin, text='Compile', command = lambda: confirmCompile(c,keepCcode.get(),keepBatchfile.get())).grid(row=3, sticky=S, pady=4)
 
 ### display the About window.
 def about():
