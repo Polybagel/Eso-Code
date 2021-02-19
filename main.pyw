@@ -186,6 +186,7 @@ def about():
     filewin = Toplevel(root)
     filewin.geometry("320x120")
     filewin.title('About BF Code')
+    filewin.resizable(False, False)
    
     label = Label(filewin, wraplength=250, text="The Brainfuck compiler is designed to take brainfuck source code, convert it to C code, and compile it into an .exe file using gcc.\n\nCreated by Polybagel")
     label.grid(row=0,column=0,padx=25,pady=10)
@@ -195,6 +196,7 @@ def tutorial():
     filewin = Toplevel(root)
     filewin.geometry("320x240")
     filewin.title('How to use BF Code')
+    filewin.resizable(False, False)
    
     label = Label(filewin, wraplength=250, text="Upon opening the Brainfuck compiler, you can simply paste brainfuck source code into the text box.\n\nIf you want to save your code, simply go to File->Save, and select the file destination.\n\nIf you want to compile your code into an exe, go to File->Compile, and choose a file destination for the exe.\n\nTo open a source file, go to File->Open, and select the file to open.")
     label.grid(row=0,column=0,padx=25,pady=10)
