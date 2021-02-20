@@ -8,7 +8,7 @@ A small IDE designed for brainfuck and other esolang programming; name inspired 
  - Saving and loading .bf files
  - Compile brainfuck code to .exe files
  - Internal interpreter for testing code without having to compile
- - Brainfuck code generator for easily printing strings (AKA Macros)
+ - Macro support
 
 P.S. The internal interpreter is a work in progress, it does not support input and can freeze with programs that are too large.
 
