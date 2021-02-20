@@ -2,6 +2,19 @@
 files = [('Brainfuck source file', '*.bf')]
 defExt = ".bf"
 
+command_c_equals = {
+
+    ".": "            putchar(memory[memPointer]);\n",
+    ",": "            memory[memPointer] = getchar();\n",
+    "[": "\n      while(memory[memPointer] != 0)\n      {\n",
+    "]": "}\n",
+    "<": "            memPointer-=1;\n",
+    ">": "            memPointer+=1;\n",
+    "+": "            memory[memPointer]+=1;\n",
+    "-": "            memory[memPointer]-=1;\n"
+
+}
+
 ### convert string to BF output.
 def convertStringToBF(target):
     result = ""
@@ -39,44 +52,8 @@ def generate_c_code(bf_code, memorySize):
 
 
     ### replace brainfuck commands with C equivalants
-    previousCommand = "none"
-    for i in range(len(cleanedCode)):
-        command = cleanedCode[i]
-
-        if not command == previousCommand:
-            previousCommand = command
-            commandRepeats = 0
-            search = 1
-
-            lastCommand = command
-            while True:
-                try:
-                    if cleanedCode[i+search] == command:
-                        search+=1
-                        commandRepeats+=1
-                    else:
-                        break
-                except:
-                    ### we are at the last character of the code, break!
-                    break
-            
-            if command == "<":
-                result+="            memPointer-="+str(commandRepeats+1)+";\n"
-            elif command == ">":
-                result+="            memPointer+="+str(commandRepeats+1)+";\n"
-            elif command == "+":
-                result+="            memory[memPointer]+="+str(commandRepeats+1)+";\n"
-            elif command == "-":
-                result+="            memory[memPointer]-="+str(commandRepeats+1)+";\n"
-                
-        if command == ".":
-            result+="            putchar(memory[memPointer]);\n"
-        elif command == ",":
-            result+="            memory[memPointer] = getchar();\n"
-        elif command == "[":
-            result+="\n      while(memory[memPointer] != 0)\n      {\n"
-        elif command == "]":
-            result+="}\n"
+    for command in cleanedCode:            
+        result+=command_c_equals[command]
 
     ### add the final return 0 and '}' character
     result+="\ngetchar();\nreturn 0;\n}"
