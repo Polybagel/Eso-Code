@@ -2,7 +2,7 @@
 
     Eso Code
 
-    Created by Polybagel
+    Created by Polybagel, 2021
 
     Written in python 3.9.1
     
@@ -24,28 +24,81 @@ import interpreter
 from brainfuck import *
 import brainfuck
 
+langAbbriveations = {
 
-valid_input = False
-targetLang = "none"
+    "Brainfuck": "bf"
+
+}
+
+targetLang = "bf"
 defaultExt = ""
 
 
-while not valid_input:
-    print("Please select a target language: \n    Brainfuck = bf\n")
-    targetLang = input(": ").lower()
-    if targetLang == "bf":
-        valid_input = True
-        defaultExt = brainfuck.defExt
-    else:
-        print("\nInvalid input! Please try again.\n")
 
-### allowed file formats###
+
+
+### show the startup screen
+startup = Tk()
+startup.geometry("300x225")
+startup.title("Eso Code setup")
+startup.resizable(False, False)
+
+### grab the icon
+BF_Icon = PhotoImage(file = 'textures/icon.png')
+
+### set the icon
+startup.iconphoto(False, BF_Icon)
+
+### runs the gcc -v command, a return value of 0 means the command ran with no errors. Anything else means there was an error.
+### an error with "gcc -v" usually means you dont have it installed.
+GCC_installed = os.system("gcc -v") == 0
+
+if not GCC_installed:
+    error = Label(startup, text="ERROR! GCC is not installed!\nYou will not be able to compile programs!", foreground="red")
+    error.pack(pady=7)
+
+### select the target language
+langLabel = Label(startup, text="Please select a target language.").pack(pady=10)
+
+# Create a Tkinter variable
+tkvar = StringVar(startup)
+
+# Dictionary with options
+choices = { 'Brainfuck'}
+tkvar.set('Brainfuck') # set the default option
+
+popupMenu = OptionMenu(startup, tkvar, *choices)
+popupMenu.pack(pady=25)
+
+
+continueButton = Button(startup, text="Continue", command=startup.destroy).pack()
+
+
+# on change dropdown value
+def change_dropdown(*args):
+    print(langAbbriveations[tkvar.get()])
+
+# link function to change dropdown
+tkvar.trace('w', change_dropdown)
+
+
+if targetLang == "bf":
+    valid_input = True
+    defaultExt = brainfuck.defExt
+
+
+
+    
+
+### initalize the default file extensions, mainly as a safety feature
 files = [('generic', '*.txt')]
 
 if targetLang == "bf":
     files = brainfuck.files
 
 ex = [('Excecutable file', '*.exe')]
+
+startup.mainloop()
 
 ### generates a .bat file containing the generated command to compile the c source with gcc.
 def generate_compile_batch(command,setting2):
@@ -55,17 +108,17 @@ def generate_compile_batch(command,setting2):
 
     subprocess.call([r'compile.bat'])
 
-    if setting2 == 0: ### don't delete the batch file
+    if setting2 == 0: ### delete the batch file only if the settings dictate to preserve it
         os.remove("compile.bat")
 
 def save_code(code):
     got = code.get("1.0",'end-1c')
     f = filedialog.asksaveasfile(mode='w', filetypes = files, defaultextension=defaultExt)
-    if f is None: # asksaveasfile return `None` if dialog closed with "cancel".
+    if f is None: ### asksaveasfile return `None` if dialog closed with "cancel".
         return
     text2save = got
     f.write(text2save)
-    f.close() # create the c file
+    f.close() ### create the c file
 
 
 """
