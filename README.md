@@ -1,7 +1,7 @@
-# BF Code
-![BF Code icon](textures/icon.png?raw=true)
+# Eso Code
+![Eso Code icon](textures/icon.png?raw=true)
 
-A small IDE designed for brainfuck programming; name inspired by VS Code.
+A small IDE designed for brainfuck and other esolang programming; name inspired by VS Code.
 
 # Features
  - Basic code writing environment
