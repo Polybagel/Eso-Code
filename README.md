@@ -23,7 +23,11 @@ The only requirements to use this IDE include the following:
 P.S. This may also work on older versions of python 3, but I have not tested them.
 
 # Writing your first esolang program
-When you first open the program, you are met with a blank text area. This is where you can either manually type in your code, copy and paste code from the internet, or load and save code from source files.
+When first opening Eso Code, you will be met with a startup screen asking for the target language. The default is brainfuck, but you can any one you like. (the only one programmed in right now is brainfuck)
+Once you've selected your target language, simply hit continue.
+This startup screen will also tell you if you have GCC installed, if you don't have it installed; there will be an error letting you know.
+
+After you've set everything up, you are met with a blank text area. This is where you can either manually type in your code, copy and paste code from the internet, or load and save code from source files.
 
 Once you have written your code, you might want to comment it. There is no specified comment indicator, as all characters that aren't brainfuck commands are discarded, so any plain text is treated as a comment. (This may depend on what esolang you are programming in, but for many this holds true)
 
