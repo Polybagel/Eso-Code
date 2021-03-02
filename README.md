@@ -7,6 +7,7 @@ A small IDE designed for brainfuck and other esolang programming; name inspired 
  - Basic code writing environment
  - Saving and loading source files
  - Compile esolang code to .exe files
+ - Internal GCC compiler binaries included, no need to install anything yourself, everything this program needs is included in the download
  - Internal interpreter for testing code without having to compile
  - Macro support
 
@@ -18,7 +19,6 @@ To install, just pull this repo and run the .pyw file.
 # Requirements?
 The only requirements to use this IDE include the following:
  - Latest version of python
- - A working installation of the GCC compiler (Only needed for compiling programs, you can still write, save, and load programs without GCC installed.)
 
 P.S. This may also work on older versions of python 3, but I have not tested them.
 
